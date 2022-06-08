@@ -4,12 +4,6 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>dev.snowdrop</groupId>
-    <artifactId>snowdrop-dependencies</artifactId>
-    <version>2.5.12.Final</version>
-  </parent>
-
   <groupId>dev.snowdrop.example</groupId>
   <artifactId>messaging-work-queue</artifactId>
   <version>2.5.12-3-SNAPSHOT</version>
@@ -22,11 +16,14 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
     <maven.min.version>3.3.9</maven.min.version>
     <jdk.min.version>${maven.compiler.source}</jdk.min.version>
     <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.22.2</maven-failsafe-plugin.version>
+
+    <amqp-10-starter.version>2.5.4</amqp-10-starter.version>
+    <dekorate.version>2.9.3</dekorate.version>
+    <spring-boot.version>2.5.12</spring-boot.version>
   </properties>
 
   <repositories>
@@ -65,19 +62,48 @@
     </pluginRepository>
   </pluginRepositories>
 
-  <build>
-    <plugins>
-      <plugin>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.dekorate</groupId>
+        <artifactId>dekorate-spring-bom</artifactId>
+        <version>${dekorate.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.amqphub.spring</groupId>
+        <artifactId>amqp-10-jms-spring-boot-starter</artifactId>
+        <version>${amqp-10-starter.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <configuration/>
+          <executions>
+            <execution>
+              <goals>
+                <goal>repackage</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>

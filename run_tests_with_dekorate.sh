@@ -24,5 +24,18 @@ if [[ $(waitFor "spring-boot-messaging-work-queue-worker" "app.kubernetes.io/nam
   exit 1
 fi
 
-# 3.- Run OpenShift Tests
-./mvnw -s .github/mvn-settings.xml verify -pl tests -Popenshift-it
+# 3.- Capture SpringBoot version
+SB_VERSION_SWITCH=""
+
+while getopts v: option
+do
+    case "${option}"
+        in
+        v)SB_VERSION_SWITCH="-Dspring-boot.version=${OPTARG}";;
+    esac
+done
+
+echo "SB_VERSION_SWITCH: ${SB_VERSION_SWITCH}"
+
+# 4.- Run OpenShift Tests
+eval "./mvnw -s .github/mvn-settings.xml verify -pl tests -Popenshift-it ${SB_VERSION_SWITCH}"
